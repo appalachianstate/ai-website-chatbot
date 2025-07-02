@@ -4,15 +4,30 @@ class AIChatbot extends HTMLElement {
         super();
         this.attachShadow({ mode: 'open' }); // Encapsulate the component
 
-        // Get attributes from the custom element
-        const chatIconSrc = this.getAttribute('chat-icon') || 'data:image/svg+xml;base64,PHN2ZyBpZD0iQUktY2hhdEljb24iIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsaXAtcnVsZT0iZXZlbm9kZCI+PHBhdGggZD0iTTI0IDIwaC0zdjRsLTUuMzMzLTRoLTcuNjY3di00aDJ2MmY2LjMzM2wyLjY2NyAydjJ2LTJoM3YtOC4wMDFoLTJ2LTJoNHYxMi4wMDF6bS02LTZoLTkuNjY3bC01LjMzMyA0di00aC0zdi0xNC4wMDFoMTh2MTQuMDAxIi8+PC9zdmc+'; // Default chat icon SVG
+        // Initialize properties (but don't get attributes yet)
+        this.chatToggleButton = null;
+        this.chatPopup = null;
+        this.chatIcon = null;
+        this.closeIcon = null;
+        this.copilotFrame = null;
+        this.CopilotAgentUrl = null; // Will be set in connectedCallback
+
+        this.isChatOpen = false;
+        this.iframeLoaded = false;
+    }
+
+    // connectedCallback is called when the element is added to the document's DOM
+    connectedCallback() {
+        // Now get attributes from the custom element
+        const chatIconSrc = this.getAttribute('chat-icon') || 'data:image/svg+xml;base64,PHN2ZyBpZD0iQUktY2hhdEljb24iIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnL3N2ZyIgZmlsbC1ydWxlPSJldmVuYm9kZCIgY2xpcC1ydWxlPSJldmVub2RkIj48cGF0aCBkPSJNMjQgMjBoLTN2NGwtNS4zMzMtNGgtNy42Njd2LTRoMnYyZjYuMzMzTDIuNjY3IDJ2MnYtMmgydjIuMDAxaDN2LTguMDAxaC0ydi0yaDR2MTIuMDAxeXptLTYtNmgtOS42NjdsLTUuMzMzIDR2LTRoLTN2LTE0LjAwMWgxOHYxNC4wMDEiLz48L3N2Zz4='; // Default chat icon SVG
         const chatTitle = this.getAttribute('chat-title') || 'Chatbot';
         const agentUrl = this.getAttribute('agent-url');
 
         if (!agentUrl) {
             console.error('AI-Chatbot: "agent-url" attribute is required.');
-            return;
+            return; // Stop execution if critical attribute is missing
         }
+        this.CopilotAgentUrl = agentUrl; // Assign it here
 
         this.shadowRoot.innerHTML = `
             <style>
@@ -91,17 +106,14 @@ class AIChatbot extends HTMLElement {
             </button>
         `;
 
+        // Get references to elements within the shadow DOM
         this.chatToggleButton = this.shadowRoot.getElementById('AI-chatToggleButton');
         this.chatPopup = this.shadowRoot.getElementById('AI-chatPopup');
         this.chatIcon = this.shadowRoot.getElementById('AI-chatIcon');
         this.closeIcon = this.shadowRoot.getElementById('AI-closeIcon');
         this.copilotFrame = this.shadowRoot.getElementById('AI-copilotFrame');
 
-        this.CopilotAgentUrl = agentUrl;
-
-        this.isChatOpen = false;
-        this.iframeLoaded = false;
-
+        // Add event listener
         this.chatToggleButton.addEventListener('click', this.toggleChat.bind(this));
     }
 
