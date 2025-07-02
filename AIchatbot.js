@@ -59,7 +59,7 @@ class AIChatbot extends HTMLElement {
                     position: fixed;
                     bottom: 20px;
                     right: 20px;
-                    background-color: #0078d4; /* Microsoft blue for example */
+                    background-color: #ffcc00;
                     color: white;
                     border: none;
                     border-radius: 50%;
@@ -73,7 +73,7 @@ class AIChatbot extends HTMLElement {
                     z-index: 1001;
                 }
                 #AI-chatToggleButton:hover {
-                    background-color: #005bb5;
+                    background-color: #8b7314;
                 }
                 .AI-hidden {
                     display: none;
