@@ -65,7 +65,7 @@ class AIChatbot extends HTMLElement {
                     bottom: 20px;
                     right: 20px;
                     background-color: #ffcc00;
-                    color: white;
+                    color: black;
                     border: none;
                     border-radius: 50%;
                     width: 50px;
