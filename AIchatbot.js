@@ -93,7 +93,6 @@ class AIChatbot extends HTMLElement {
                 }
             </style>
             <div id="AI-chatPopup" class="AI-popup-hidden">
-                <div class="AI-header">${chatTitle}</div>
                 <div class="AI-iframe-container">
                     <iframe id="AI-copilotFrame" title="${chatTitle}" allow="microphone; camera; autoplay; fullscreen"></iframe>
                 </div>
